@@ -1,0 +1,17 @@
+[package]
+name = "atomic_value"
+version = "0.1.0"
+authors = ["Sherlock Holo <sherlockya@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[features]
+default = []
+concurrent-test = ["loom"]
+
+[dependencies]
+loom = { version = "0.3", optional = true, features = ["checkpoint"] }
+
+[dev-dependencies]
+loom = { version = "0.3", features = ["checkpoint"] }

@@ -3,15 +3,20 @@ name = "atomic_value"
 version = "0.1.0"
 authors = ["Sherlock Holo <sherlockya@gmail.com>"]
 edition = "2018"
+license = "MIT"
+repository = "https://github.com/Sherlock-Holo/atomic_value"
+description = "this crate provides a way that you can load or store value atomically like Golang AtomicValue."
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
 default = []
+
+# use for test
 concurrent-test = ["loom"]
 
 [dependencies]
-loom = { version = "0.3", optional = true, features = ["checkpoint"] }
+loom = { version = "0.3", optional = true }
 
 [dev-dependencies]
-loom = { version = "0.3", features = ["checkpoint"] }
+loom = { version = "0.3" }

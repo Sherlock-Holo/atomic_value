@@ -22,9 +22,6 @@ fn concurrent_store() {
 
         for th in threads {
             th.join().unwrap();
-            /*if let Err(err) = th.join() {
-                eprintln!("loom thread join failed {:?}", err);
-            }*/
         }
     })
 }

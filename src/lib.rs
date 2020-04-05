@@ -2,14 +2,14 @@
 use std::cell::UnsafeCell;
 use std::mem;
 #[cfg(not(feature = "concurrent-test"))]
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{spin_loop_hint, AtomicBool, Ordering};
 #[cfg(not(feature = "concurrent-test"))]
 use std::sync::Arc;
 
 #[cfg(feature = "concurrent-test")]
 use loom::cell::UnsafeCell;
 #[cfg(feature = "concurrent-test")]
-use loom::sync::atomic::{AtomicBool, Ordering};
+use loom::sync::atomic::{spin_loop_hint, AtomicBool, Ordering};
 #[cfg(feature = "concurrent-test")]
 use loom::sync::Arc;
 
@@ -28,7 +28,9 @@ impl<T> AtomicValue<T> {
     }
 
     pub fn load(&self) -> Arc<T> {
-        while self.using.compare_and_swap(false, true, Ordering::AcqRel) {}
+        while self.using.compare_and_swap(false, true, Ordering::AcqRel) {
+            spin_loop_hint()
+        }
 
         #[cfg(not(feature = "concurrent-test"))]
         let value = unsafe { &*self.value.get() }.clone();
@@ -46,7 +48,9 @@ impl<T> AtomicValue<T> {
     }
 
     pub fn swap(&self, new_value: T) -> Arc<T> {
-        while self.using.compare_and_swap(false, true, Ordering::AcqRel) {}
+        while self.using.compare_and_swap(false, true, Ordering::AcqRel) {
+            spin_loop_hint()
+        }
 
         #[cfg(not(feature = "concurrent-test"))]
         let pointer = unsafe { &mut *self.value.get() };
@@ -65,7 +69,9 @@ impl<T> AtomicValue<T> {
     where
         T: PartialEq,
     {
-        while self.using.compare_and_swap(false, true, Ordering::AcqRel) {}
+        while self.using.compare_and_swap(false, true, Ordering::AcqRel) {
+            spin_loop_hint()
+        }
 
         #[cfg(not(feature = "concurrent-test"))]
         let pointer = unsafe { &mut *self.value.get() };

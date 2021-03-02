@@ -1,9 +1,12 @@
-use loom;
+#[cfg(loom)]
 use loom::sync::Arc;
+#[cfg(loom)]
 use loom::thread;
 
+#[cfg(loom)]
 use atomic_value::AtomicValue;
 
+#[cfg(loom)]
 #[test]
 fn concurrent_store() {
     loom::model(|| {
